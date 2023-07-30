@@ -52,7 +52,7 @@ class TextTokenizer:
         else:
             raise ValueError("Currently only integer mapped tokenisation supported")
 
-        encoded = [s2i[v] for v in text_data]
+        encoded = [s2i.get(v, -1) for v in text_data]  # to deal with out-of-vocabulary elements encode -1
         return encoded
 
     def token_decoder(self, tokenised_data):
@@ -65,5 +65,5 @@ class TextTokenizer:
         else:
             raise ValueError("Currently only integer mapped tokenisation supported")
 
-        decoded = [i2s[i] for i in tokenised_data]
+        decoded = [i2s.get(i, '*') for i in tokenised_data]  # asterisks represents out-of-vocab encodings
         return decoded
