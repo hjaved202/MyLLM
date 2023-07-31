@@ -7,9 +7,11 @@ from pathlib import Path
 device = torch.device('mps') if torch.has_mps else 'cpu'
 
 # Read in file
-train_data, val_data, test_data = dg.load_tiny_shakespeare()
-filepath = Path().cwd().parent.joinpath('data/tiny-shakespeare.txt')
-# data = dg.load_textfile_dataset(filepath)
+text_dataset = 'tiny-shakespeare'
+text_loader = dg.TextDatasetLoad(hugging_face_dataset=text_dataset)
+train_data, val_data, test_data = text_loader.load_huggingface_dataset()
+# filepath = Path().cwd().parent.joinpath('data/tiny-shakespeare.txt')
+# data = text_loader.load_textfile_dataset(filepath)
 
 # Tokenisation
 tokenizer = dg.TextTokenizer(train_data)  # extract vocab and corresponding encodings from train dataset only

@@ -4,7 +4,7 @@ from pathlib import Path
 
 # Read in raw text file
 filepath = Path().cwd().parent.joinpath('data/tiny-shakespeare.txt')
-raw_data = dg.load_textfile_dataset(filepath)
+raw_data = dg.TextDatasetLoad(filepath=filepath).load_textfile()
 
 # Corpus length
 print(f"Corpus length: {len(raw_data)} characters\n")
@@ -24,7 +24,7 @@ print(tokenizer.token_encoder(raw_data[0:33]))
 print(''.join(tokenizer.token_decoder(tokenizer.token_encoder(raw_data[0:33]))))
 
 # Dealing with out-of-vocab examples
-print(f"\nFor out of vocabulary elements, e.g. '{'*, (, )'}', the encoding is: {tokenizer.token_encoder('*)(')}")
+print(f"\nFor out of vocabulary elements, e.g. '{'*, (, )'}', the encoding is: {tokenizer.token_encoder('*)(')}\n")
 
 # Setting up prediction problem
 context_length = 8  # how many preceding tokens used to predict next token (also known as block length)

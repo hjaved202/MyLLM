@@ -7,16 +7,25 @@ from datasets import load_dataset  # HuggingFace library
 from pathlib import Path
 
 
-def load_tiny_shakespeare():
-    dataset = load_dataset('tiny_shakespeare')
-    train_data, val_data, test_data = dataset['train'], dataset['validation'], dataset['test']
-    return train_data, val_data, test_data
+class TextDatasetLoad:
+    """
+    Class relating to the loading in of a text corpus
+    """
 
+    def __init__(self, hugging_face_dataset='tiny_shakespeare', filepath=None):
+        self.filepath = filepath
+        self.dataset = hugging_face_dataset
 
-def load_textfile_dataset(datapath: Path):
-    with open(datapath, 'r', encoding='utf-8') as f:
-        text = f.read()
-    return text
+    def load_textfile(self):
+        with open(self.filepath, 'r', encoding='utf-8') as f:
+            text = f.read()
+        return text
+
+    def load_huggingface_dataset(self):
+        dataset = load_dataset(self.dataset)
+        train_data, val_data, test_data = dataset['train'], dataset['validation'], dataset['test']
+        return train_data, val_data, test_data
+
 
 
 class TextTokenizer:
@@ -67,3 +76,5 @@ class TextTokenizer:
 
         decoded = [i2s.get(i, '*') for i in tokenised_data]  # asterisks represents out-of-vocab encodings
         return decoded
+
+
