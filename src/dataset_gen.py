@@ -1,8 +1,8 @@
 """
 Script creates train-test data
 """
-
 # Import relevant libraries
+import torch
 from datasets import load_dataset  # HuggingFace library
 from pathlib import Path
 
@@ -25,7 +25,6 @@ class TextDatasetLoad:
         dataset = load_dataset(self.dataset)
         train_data, val_data, test_data = dataset['train'], dataset['validation'], dataset['test']
         return train_data, val_data, test_data
-
 
 
 class TextTokenizer:
@@ -77,4 +76,22 @@ class TextTokenizer:
         decoded = [i2s.get(i, '*') for i in tokenised_data]  # asterisks represents out-of-vocab encodings
         return decoded
 
+
+class MiniBatchLoader:
+    """
+    Class to mini-batch a sequence of data in the context of next token prediction
+    """
+    def __init__(self, block_size: int, batch_size: int, shuffle: bool = True):
+        self.block_size = block_size  # same as maximum context length
+        self.batch_size = batch_size
+        self.shuffle = True
+
+    def get_batch(self, sequence_data: torch.Tensor):
+        """
+        Crude method to return a random mini-batch of data
+        """
+        start_idx = torch.randint(low=0, high=len(sequence_data)-self.block_size, size=(self.batch_size, 1))
+        x_b = torch.stack([sequence_data[i: i+self.block_size] for i in start_idx])
+        y_b = torch.stack([sequence_data[i+1: i+self.block_size+1] for i in start_idx])
+        return x_b, y_b
 
