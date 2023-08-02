@@ -97,3 +97,20 @@ class MiniBatchLoader:
         return x_b, y_b
 
 
+class TextSequenceDataset(Dataset):
+    """
+    Class to make a PyTorch dataset, enabling easy mini-batch dataloader creation
+    """
+
+    def __init__(self, seq_data: torch.Tensor, block_size: int):
+        self.seq_data = seq_data[:-1]
+        self.target_data = seq_data[1:]  # ensures input and target same sequence length (not sure how important?)
+        self.block_size = block_size
+
+    def __getitem__(self, idx: int):
+        x_seq = self.seq_data[idx:idx+self.block_size]
+        y_seq = self.target_data[idx:idx+self.block_size]
+        return x_seq, y_seq
+
+    def __len__(self):
+        return len(self.seq_data) - self.block_size  # the number of unique sequences for a given context length
